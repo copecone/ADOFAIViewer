@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>ADOFAIViewer</title>
+        
+        <script src="src/script/main.js"></script>
+        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        
+        <link href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/variable/woff2/SUIT-Variable.css" rel="stylesheet">
+        <link href='src/style/main.css' rel="stylesheet">
+    </head>
+    
+    <body>
+        <div class='filebox'>
+            <label for="input_file1">
+                <div class="file-not-selected">
+                    파일을 선택해주세요
+                    <br>
+
+                    <span class='material-symbols-outlined file-selection'>
+                        folder_open
+                    </span>
+                </div>
+                
+                <div class="file-selected invisible">filename</div>
+            </label>
+            
+            <input type="file" id="input_file1" class="invisible" accept=".adofai">
+        </div>
+    </body>
+</html>
