@@ -33,6 +33,9 @@ body {
     padding-left: 50px; padding-right: 50px; padding-top: 50px; padding-bottom: 25px;
 }
 
+.filebox label {
+    cursor: pointer;
+}
 
 .filebox .file-selection {
     font-size: 180px;
