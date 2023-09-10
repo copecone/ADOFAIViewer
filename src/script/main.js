@@ -34,15 +34,15 @@ document.addEventListener('DOMContentLoaded', () => {
         let levelInfoBox = new BoxUI(); levelInfoBox.addClass('level-info');
         levelInfoBox.setText(
             `<size=40px>개요</size>
-            ${parser.angleData.length} Tiles
-            ${parser.actions.length} Events
-            ${decorations} Decorations
-            ${texts} Texts
+            타일 ${parser.angleData.length}개
+            이벤트 ${parser.convertedActions.length}개 (반복 ${parser.convertedActions.length - parser.actions.length}개)
+            장식 ${decorations}개
+            텍스트 ${texts}개
 
             BPM: ${parser.settings.bpm}
 
-            Song: ${parser.settings.artist} - ${parser.settings.song}</size color>
-            Level by ${parser.settings.author}</size color>`
+            음악: ${parser.settings.artist} - ${parser.settings.song}</size color>
+            레벨 제작자: ${parser.settings.author}</size color>`
         );
         levelInfoBox.addTo(document.body);
         
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         let textChanges = parser.actionTypes.SetText?.length ?? 0;
-        parser.actionTypes.MoveDecorations?.forEach((decoration) => {
+        parser.convertedActionTypes.MoveDecorations?.forEach((decoration) => {
             decorationMoves++;
             if (decoration.hasOwnProperty('decorationImage')) {
                 decorationChanges++;
@@ -81,17 +81,82 @@ document.addEventListener('DOMContentLoaded', () => {
         let decoInfoBox = new BoxUI(); decoInfoBox.addClass('level-info');
         decoInfoBox.setText(
             `<size=40px>장식 개요</size>
-            ${decorations} Decorations
+            장식 ${decorations}개
             
-            ${decorationMoves} Decoration Moves
-            ${decorationChanges} Decoration Changes
-            ${decorationImages} Images Used
+            장식 이동 ${decorationMoves}번
+            장식 교체 ${decorationChanges}번
+            이미지 ${decorationImages}개 사용
             
-            ${texts} Texts
-            ${textChanges} Text Changes
+            텍스트 ${texts}개
+            텍스트 교체 ${textChanges}번
             `
         );
         decoInfoBox.addTo(document.body);
+        
+        // 필터 개요
+        let filterEvents = 0;
+        let validFilterEvents = 0;
+        
+        let filterToggles = 0;
+        let filterUsage = {};
+        let filterStatus = {};
+        let filterUsed = {};
+        
+        let filterCount = 0;
+        let validFilterCount = 0;
+        
+        parser.convertedActionTypes.SetFilter?.forEach((filter) => {
+            filterEvents++;
+            if (filter.enabled == 'Enabled' || filter.enabled == true) { // 필터를 활성화하는 이벤트
+                if (!filterUsed[filter.filter] || !filterUsed.hasOwnProperty(filter.filter)) { // 첫 필터 활성화
+                    validFilterCount++;
+                    filterUsed[filter.filter] = true;
+                }
+                
+                if (!filterUsage.hasOwnProperty(filter.filter)) { // 첫 필터 사용 (활성화)
+                    filterCount++; validFilterEvents++; filterToggles++;
+                    filterUsage[filter.filter] = 1;
+                } else {
+                    if (filter.intensity !== filterStatus[filter.filter]) { // 필터 상태가 다를 때
+                        validFilterEvents++;
+                        if (!filterStatus) filterToggles++; // 필터가 꺼져 있었을 때
+                    }
+                    
+                    filterUsage[filter.filter]++;
+                }
+                
+                filterStatus[filter.filter] = filter.intensity;
+            } else if (filter.enabled == 'Disabled' || filter.enabled == false) { //필터를 비활성화하는 이벤트
+                if (!filterUsage.hasOwnProperty(filter.filter)) { // 첫 필터 사용 (비활성화)
+                    filterCount++;
+                    
+                    filterUsage[filter.filter] = 1;
+                    filterUsed[filter.filter] = false;
+                } else {
+                    if (filterStatus[filter.filter] !== false) { // 필터가 켜져 있었을 때
+                        validFilterEvents++; filterToggles++;
+                        filterStatus[filter.filter] = false;
+                    }
+                    
+                    filterUsage[filter.filter]++;
+                }
+            }
+        });
+        
+        let filterInfoBox = new BoxUI(); filterInfoBox.addClass('level-info');
+        filterInfoBox.setText(
+            `<size=40px>필터 개요</size>
+            필터 이벤트 ${filterEvents}개
+            유효 필터 이벤트 ${validFilterEvents}개 (근삿값)
+            필터 ON/OFF ${filterToggles}개 (근삿값)
+            
+            필터 ${filterCount}개 사용
+            유효한 필터 ${validFilterCount}개 사용
+            
+            거울의 방 이벤트 ${parser.convertedActionTypes.HallOfMirrors?.length ?? 0}개
+            `
+        );
+        filterInfoBox.addTo(document.body);
     }
     
     filebox.addTo(document.body);

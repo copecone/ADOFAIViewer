@@ -24,7 +24,11 @@ class ADOFAIParser {
             this.tiles.push(new ADOFAITile(angle));
         });
         
+        this.convertedTiles = this.tiles;
+        
+        this.actionTags = {};
         this.actionTypes = {};
+        this.actionRepeats = {};
         this.actions.forEach((action) => {
             // console.log(action.floor);
             this.tiles[action.floor].events.push(action);
@@ -33,7 +37,85 @@ class ADOFAIParser {
             } else {
                 this.actionTypes[action.eventType] = [action];
             }
+            
+            if (action.hasOwnProperty('eventTag') && action.eventTag !== '') {
+                let eventTags = action.eventTag.split(' ');
+                eventTags.forEach((tag) => {
+                    if (this.actionTags.hasOwnProperty(tag)) this.actionTags[tag].push(action);
+                    else this.actionTags[tag] = [action];
+                });
+            } else if (action.eventType == 'RepeatEvents') {
+                let targetTags = action.tag.split(' ');
+                targetTags.forEach((tag) => {
+                    if (this.actionRepeats.hasOwnProperty(action.floor)) {
+                        if (this.actionRepeats[action.floor].hasOwnProperty(tag)) {
+                            this.actionRepeats[action.floor][tag].push({
+                                floor: action.floor, eventType: 'RepeatEvents', 
+                                repetitions: action.repetitions, interval: action.interval
+                            });
+                        } else {
+                            this.actionRepeats[action.floor][tag] = [{
+                                floor: action.floor, eventType: 'RepeatEvents', 
+                                repetitions: action.repetitions, interval: action.interval
+                            }];
+                        }
+                    } else {
+                        this.actionRepeats[action.floor] = {};
+                        this.actionRepeats[action.floor][tag] = [{
+                            floor: action.floor, eventType: 'RepeatEvents', 
+                            repetitions: action.repetitions, interval: action.interval
+                        }];
+                    }
+                });
+            }
         });
+        
+        
+        this.convertedActionTypes = {};
+        this.convertedActions = [];
+        this.actions.forEach((action) => {
+            if (action.hasOwnProperty('eventTag')) {
+                this.convertedActions.push(action);
+                
+                if (this.actionRepeats.hasOwnProperty(action.floor)) {
+                    let eventTags = action.eventTag.split(' ');
+                    eventTags.forEach((eventTag) => {
+                        if (this.actionRepeats[action.floor].hasOwnProperty(eventTag)) {
+                            let currentRepeats = this.actionRepeats[action.floor][eventTag];
+                            currentRepeats.forEach((repeat) => {
+                                for (var i = 0; i < repeat.repetitions; i++) {
+                                    let actionCopy = {};
+                                    for (var key in action) {
+                                        if (key != 'angleOffset') {
+                                            actionCopy[key] = action[key];
+                                        } else {
+                                            actionCopy[key] = action[key] + ((i + 1) * repeat.interval) * 180;
+                                        }
+                                    }
+                                    
+                                    // console.log(actionCopy);
+                                    this.convertedActions.push(actionCopy); // 반복 횟수
+                                }
+                            });
+                        }
+                    });
+                }
+            } else {
+                this.convertedActions.push(action);
+            }
+        });
+        
+        this.convertedActions.forEach((action) => {
+            // console.log(action.floor);
+            this.convertedTiles[action.floor].events.push(action);
+            if (this.convertedActionTypes.hasOwnProperty(action.eventType)) {
+                this.convertedActionTypes[action.eventType].push(action);
+            } else {
+                this.convertedActionTypes[action.eventType] = [action];
+            }
+        });
+        
+        // console.log(this.convertedActions);
     }
     
     convertToParsable(string) {
