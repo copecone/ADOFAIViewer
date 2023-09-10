@@ -66,7 +66,16 @@ document.addEventListener('DOMContentLoaded', () => {
         let textChanges = parser.actionTypes.SetText?.length ?? 0;
         parser.actionTypes.MoveDecorations?.forEach((decoration) => {
             decorationMoves++;
-            if (decoration.hasOwnProperty('decorationImage')) decorationChanges++;
+            if (decoration.hasOwnProperty('decorationImage')) {
+                decorationChanges++;
+                
+                if (!decorationUsage.hasOwnProperty(decoration.decorationImage)) {
+                    decorationImages++;
+                    decorationUsage[decoration.decorationImage] = 1;
+                } else {
+                    decorationUsage[decoration.decorationImage]++;
+                }
+            }
         });
         
         let decoInfoBox = new BoxUI(); decoInfoBox.addClass('level-info');
