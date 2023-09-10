@@ -7,7 +7,7 @@ body {
     margin: 0px;
     display: block;
     
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     
     background-color: rgba(160, 160, 160, 1);
@@ -33,6 +33,8 @@ body {
     
     border-radius: 20px;
     border-width: 5px;
+    
+    max-width: calc(50% - (5px + 15px) * 2 - 50px * 1.5);
 }
 
 .invisible {
