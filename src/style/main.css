@@ -13,19 +13,6 @@ body {
     background-color: rgba(160, 160, 160, 1);
 }
 
-.box-ui {
-    display: inline-block;
-    
-    background-color: rgba(0, 0, 0, 0.4);
-    color: white;
-    
-    font-variation-settings: 'wght' 800;
-    
-    border: 10px white solid;
-    border-radius: 40px;
-    font-size: 24px;
-}
-
 .level-info {
     margin-left: 50px;
     margin-top: 25px;

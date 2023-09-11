@@ -1,1 +1,15 @@
-{}
+{
+    "fonts.fontSize": "17px",
+    "fonts.fontFamily": "'SourceCodePro-Medium', ＭＳ ゴシック, 'MS Gothic', monospace",
+    "linting.enabled": true,
+    "linting.collapsed": true,
+    "git-projects.maxDepth": 2,
+    "git-projects.lastVersion": "0.0.5",
+    "git-projects.basePath": "/mnt/ADOFAIViewer/",
+    "language": {
+        "javascript": {
+            "linting.prefer": [],
+            "linting.usePreferredOnly": true
+        }
+    }
+}

@@ -70,9 +70,9 @@ class ADOFAIParser {
             }
         });
         
-        
         this.convertedActionTypes = {};
         this.convertedActions = [];
+        
         this.actions.forEach((action) => {
             if (action.hasOwnProperty('eventTag')) {
                 this.convertedActions.push(action);

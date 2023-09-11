@@ -22,6 +22,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function setupInfoUI(parser) {
+        // addLine();
+        
+        let reloadBox = new BoxUI();
+        reloadBox.setText('<size=50px>파일 언로드</size>');
+        reloadBox.setCursor('pointer');
+        reloadBox.click((event) => {
+            filebox.setText(null);
+            filebox.clearFile();
+            
+            console.log(filebox)
+            clearUI((element) => {
+                if (element.uuid != filebox.uuid) element.remove();
+                console.log(element)
+            });
+        });
+        
+        reloadBox.setSpaced(true);
+        reloadBox.add();
         addLine();
         
         // 종합 개요
@@ -44,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
             음악: ${parser.settings.artist} - ${parser.settings.song}</size color>
             레벨 제작자: ${parser.settings.author}</size color>`
         );
-        levelInfoBox.addTo(document.body);
+        levelInfoBox.add();
         
         // 장식 개요
         let decorationMoves = 0;
@@ -91,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
             텍스트 교체 ${textChanges}번
             `
         );
-        decoInfoBox.addTo(document.body);
+        decoInfoBox.add();
         
         // 필터 개요
         let filterEvents = 0;
@@ -156,12 +174,13 @@ document.addEventListener('DOMContentLoaded', () => {
             거울의 방 이벤트 ${parser.convertedActionTypes.HallOfMirrors?.length ?? 0}개
             `
         );
-        filterInfoBox.addTo(document.body);
+        filterInfoBox.add();
     }
     
-    filebox.addTo(document.body);
-    
+    filebox.add();
     filebox.addFileListener((event) => {
+        console.log(event)
+        
         const reader = new FileReader();
         reader.addEventListener('load', () => {
             loadADOFAI(filebox, event.target.files[0].name, reader.result);
