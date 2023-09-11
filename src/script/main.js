@@ -12,10 +12,18 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             logJsonErr(err, result);
             
-            infoText = 
+            let errorBox = new BoxUI();
+            errorBox.setText( 
                 `<size=40px color=#FF9494>오류</size color>
-                Error: Invalid or too old ADOFAI level
-                (See the console for more details)`;
+                오류: 유효하지 않거나 너무 오래된 ADOFAI 레벨입니다
+                (자세한 사항은 콘솔에서 확인하세요)`
+            );
+            
+            addLine();
+            errorBox.add();
+            errorBox.setSpaced(true);
+            
+            return;
         }
         
         setupInfoUI(parser);
@@ -25,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // addLine();
         
         let reloadBox = new BoxUI();
-        reloadBox.setText('<size=50px>파일 언로드</size>');
+        reloadBox.setText('<size=60px>파일 언로드</size>');
         reloadBox.setCursor('pointer');
         reloadBox.click((event) => {
             filebox.setText(null);
@@ -187,6 +195,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         filebox.setText('Loading');
-        reader.readAsText(event.target.files[0], 'utf-8');
+        try {
+            reader.readAsText(event.target.files[0], 'utf-8');
+        } catch (err) {
+            filebox.setText(`<size=40px>오류</size>\n알 수 없는 파일 읽기 오류가 발생했습니다\n(자세한 사항은 콘솔에서 확인하세요)`);
+        }
     });
 });

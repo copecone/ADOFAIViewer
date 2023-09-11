@@ -31,9 +31,17 @@
     padding-left: 50px;
     padding-right: 50px;
     
-    height: 125px;
-    line-height: 125px;
-    text-align: center;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    
+    /* height: 75px;
+    /* line-height: 125px; 
+    text-align: center; */
+}
+
+.box-ui.spaced div {
+    position: relative;
+    top: 50%; /* transform: translateY(-50%); */
 }
 
 .filebox {
