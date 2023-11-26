@@ -119,7 +119,7 @@ class ADOFAIParser {
     }
     
     convertToParsable(string) {
-        const regex = /(\"decText\"\:\ \")([^\n\r\"]*)([\r?\n]+)([^\n\r,"]*)(")/g;
+        const regex = /(\"decText\"\:\ \")([^\n\r\"]*)([\r?\n]+)([^\n\r,"]*)(")|(\"comment\"\:\ \")([^\n\r\"]*)([\r?\n]+)([^\n\r,"]*)(")/g;
         
         let result = string
             .replaceAll('\r\n', '\n')
@@ -131,12 +131,12 @@ class ADOFAIParser {
         
         // console.log(result);
         
-        const subst = `$1$2\\n$4$5`;
-        function replacer(match, p1, p2, p3, p4, p5) {
+        const subst = `$1$2$6$7\\n$4$5$9$10`;
+        /*function replacer(match, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) {
             return p1 + p2 + p3.replaceAll('\n', '\\n').replace('\t', '\\t') + p4 + p5;
-        }
+        }*/
         
-        result = result.replaceAll(regex, replacer);
+        result = result.replaceAll(regex, subst);
         return result;
     }
 }
