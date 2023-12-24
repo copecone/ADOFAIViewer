@@ -137,15 +137,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!filterUsed[filter.filter] || !filterUsed.hasOwnProperty(filter.filter)) { // 첫 필터 활성화
                     validFilterCount++;
                     filterUsed[filter.filter] = true;
+                    // console.log(filter);
                 }
                 
                 if (!filterUsage.hasOwnProperty(filter.filter)) { // 첫 필터 사용 (활성화)
+                    // console.log(filter);
                     filterCount++; validFilterEvents++; filterToggles++;
                     filterUsage[filter.filter] = 1;
                 } else {
                     if (filter.intensity !== filterStatus[filter.filter]) { // 필터 상태가 다를 때
                         validFilterEvents++;
-                        if (!filterStatus) filterToggles++; // 필터가 꺼져 있었을 때
+                        if (filterStatus[filter.filter] === false) filterToggles++; // 필터가 꺼져 있었을 때
+                        
+                        console.log(filter);
                     }
                     
                     filterUsage[filter.filter]++;
@@ -158,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     filterUsage[filter.filter] = 1;
                     filterUsed[filter.filter] = false;
+                    filterStatus[filter.filter] = false;
                 } else {
                     if (filterStatus[filter.filter] !== false) { // 필터가 켜져 있었을 때
                         validFilterEvents++; filterToggles++;

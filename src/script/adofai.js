@@ -11,9 +11,24 @@ class ADOFAIParser {
         this.parsableString = this.convertToParsable(adofaiString);
         this.adofaiLevel = JSON.parse(this.parsableString);
         
+        this.pathDataMap = {
+            R: 0, p: 15, j: 30, E: 45, T: 60, o: 75, U: 90, q: 105, G: 120, Q: 135, H: 150, J: 150, W: 165, L: 180, x: 195, N: 210, Z: 225, F: 240, V: 255, D: 270, Y: 285, B: 300, C: 315, M: 330, A: 345, '!': 999
+        };
+        
         console.log(this.parsableString);
 
         this.angleData = this.adofaiLevel.angleData;
+        if (this.angleData === undefined && this.adofaiLevel.hasOwnProperty('pathData')) {
+            this.angleData = [];
+            this.pathData = this.adofaiLevel.pathData;
+            console.log('Converting pathData...');
+            
+            for (var index = 0; index < this.pathData.length; index++) {
+                var path = this.pathData[index];
+                this.angleData.push(this.pathDataMap[path]);
+            }
+        }
+
         this.settings = this.adofaiLevel.settings;
         this.actions = this.adofaiLevel.actions;
         
